@@ -44,4 +44,28 @@ $lang = array_merge($lang, array(
 	'CLI_DESCRIPTION_REBUILD_COMPOSER'		=> 'Rebuild Composer repository',
 	'CLI_REBUILD_COMPOSER_FORCE'			=> 'Force rebuild even if a build is in progress',
 	'CLI_REBUILD_COMPOSER_FROM_FILE'		=> 'Rebuild repository from revision zip files',
+
+	'CLI_DESCRIPTION_EXTENSION_REPACK'	 	=> 'Repack extension revisions',
+	'CLI_EXTENSION_REPACK_EXT_NAME'			=> 'vendor/extname to repack. If omitted, all revisions of all extensions are repacked.',
+	'CLI_EXTENSION_REPACK_MESSAGE'			=> 'Message to post in each extension’s validation discussion topic.',
+	'CLI_EXTENSION_REPACK_POST_NOTE'		=> '[size=80]This post was created via CLI command [i]%1$s[/i][/size]',
+	'CLI_EXTENSION_REPACK_ERROR'			=> 'Error while repacking revision %1$d (%2$s) : %3$s', // 1=revision id, 2=package name, 3=error message
+	'CLI_EXTENSION_REPACK_FINISHED'			=> array(
+		0 => 'No revisions to repack.',
+		1 => 'Successful repacked revisions: %1$d',
+	),
+
+	// Event analyser
+	'CLI_DESCRIPTION_EXTENSION_EVENTS'			=> 'Scan extensions to discover the most frequently used events.',
+	'CLI_DESCRIPTION_EXTENSION_EVENTS_EXPLAIN'	=> 'This script will scan through approved phpBB extensions to determine the most commonly used template and PHP events.',
+	'CLI_EXTENSION_EVENTS_SCAN_CONTRIB'			=> 'Scanning "%s", revision id "%d", file "%s".',
+	'CLI_EXTENSION_EVENTS_SCAN_START'			=> 'Start scanning contributions...',
+	'CLI_EXTENSION_EVENTS_SCAN_FINISH'			=> 'Finished scanning contributions...',
+	'CLI_EXTENSION_EVENTS_EXECUTION_TIME'		=> 'Total execution time: %d hr, %d min, %d sec. (average per contribution: %d hr, %d min, %d sec)',
+	'CLI_EXTENSION_EVENTS_NAME'					=> 'Event Name',
+	'CLI_EXTENSION_EVENTS_USAGES'				=> 'Usages',
+	'CLI_EXTENSION_EVENTS_EXTENSION_NAME'		=> 'Extension Name',
+	'CLI_EXTENSION_EVENTS_TEMPLATE'				=> 'phpBB Template Event Usages',
+	'CLI_EXTENSION_EVENTS_PHP'					=> 'phpBB PHP Event Usages',
+	'CLI_EXTENSION_EVENTS_CUSTOM'				=> 'Custom Extension Events',
 ));

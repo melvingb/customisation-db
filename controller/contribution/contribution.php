@@ -14,6 +14,7 @@
 namespace phpbb\titania\controller\contribution;
 
 use phpbb\titania\contribution\type\collection as type_collection;
+use phpbb\titania\ext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -139,11 +140,11 @@ class contribution extends base
 		}
 
 		// Set tracking
-		$this->tracking->track(TITANIA_CONTRIB, $this->contrib->contrib_id);
+		$this->tracking->track(ext::TITANIA_CONTRIB, $this->contrib->contrib_id);
 
 		// Subscriptions
 		$this->subscriptions->handle_subscriptions(
-			TITANIA_CONTRIB,
+			ext::TITANIA_CONTRIB,
 			$this->contrib->contrib_id,
 			$this->contrib->get_url(),
 			'SUBSCRIBE_CONTRIB'
@@ -171,8 +172,8 @@ class contribution extends base
 	{
 		$this->load_contrib($contrib_type, $contrib);
 		$can_use_demo =
-			$this->contrib->contrib_status == TITANIA_CONTRIB_APPROVED &&
-			$this->contrib->contrib_type == TITANIA_TYPE_STYLE &&
+			$this->contrib->contrib_status == ext::TITANIA_CONTRIB_APPROVED &&
+			$this->contrib->contrib_type == ext::TITANIA_TYPE_STYLE &&
 			$this->contrib->options['demo']
 		;
 
@@ -193,6 +194,8 @@ class contribution extends base
 		$demo->load_styles();
 		$demo->assign_details();
 
+		$this->template->assign_var('U_SITE_HOME', $this->config['site_home_url'] ?: $this->ext_config->site_home_url);
+
 		$title = $this->contrib->contrib_name .
 			' - [' . $this->ext_config->phpbb_versions[$branch]['name'] . '] ' .
 			$this->user->lang['CONTRIB_DEMO'];
@@ -210,7 +213,7 @@ class contribution extends base
 	{
 		$sql = 'SELECT *
 			FROM ' . TITANIA_TOPICS_TABLE . '
-			WHERE topic_type = ' . TITANIA_QUEUE_DISCUSSION . '
+			WHERE topic_type = ' . ext::TITANIA_QUEUE_DISCUSSION . '
 			AND parent_id = ' . $this->contrib->contrib_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -285,25 +288,31 @@ class contribution extends base
 		$this->contrib->get_download();
 		$branches = array();
 
-		foreach ($this->contrib->download as $download)
+		ksort($this->contrib->download);
+
+		foreach ($this->contrib->download as $branch => $download)
 		{
 			$version = $download['revision_version'];
 
-			if (!preg_match('#^(\d+\.\d+)#', $version, $matches))
+			if (!preg_match('#^(\d+\.\d+)#', $version))
 			{
 				continue;
 			}
 
-			$branches[$matches[1]] = array(
+			$branch = substr_replace($branch, '.', 1, 0);
+
+			$empty_sid = '';
+
+			$branches[$branch] = array(
 				'current'		=> $version,
 				'download'		=> $this->helper->route('phpbb.titania.download', array(
 					'id' => $download['attachment_id'],
-				)),
+				), true, $empty_sid),
 				'announcement'	=> $this->helper->route('phpbb.titania.contrib', array(
 					'page'			=> '',
 					'contrib_type'	=> $contrib_type,
 					'contrib'		=> $contrib,
-				)),
+				), true, $empty_sid),
 				'eol'			=> null,
 				'security'		=> false,
 			);
