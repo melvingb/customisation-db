@@ -53,6 +53,13 @@ class titania_revision extends \phpbb\titania\entity\database_base
 	*/
 	public $phpbb_versions = array();
 
+	/**
+	 * Skip EPV
+	 *
+	 * @var boolean
+	 */
+	public $skip_epv = false;
+
 	/** @var attachment */
 	protected $attachment;
 
@@ -429,7 +436,7 @@ class titania_revision extends \phpbb\titania\entity\database_base
 					$this->contrib = contribs_overlord::get_contrib_object($this->contrib_id, true);
 				}
 
-				if (in_array($this->contrib->contrib_status, array(ext::TITANIA_CONTRIB_NEW)))
+				if ($this->contrib->contrib_status == ext::TITANIA_CONTRIB_NEW)
 				{
 					$this->contrib->change_status(ext::TITANIA_CONTRIB_APPROVED);
 				}

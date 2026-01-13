@@ -731,7 +731,12 @@ class titania_contribution extends \phpbb\titania\entity\message_base
 			}
 
 			$vars = array_merge($vars, array(
-				'CONTRIB_TYPE'					=> $this->type->lang,
+				'CONTRIB_NEW'					=> $this->type->lang['new'],
+				'CONTRIB_CLEANED'				=> $this->type->lang['cleaned'],
+				'CONTRIB_HIDDEN'				=> $this->type->lang['hidden'],
+				'CONTRIB_DISABLED'				=> $this->type->lang['disabled'],
+
+				'CONTRIB_TYPE'					=> $this->type->lang['lang'],
 				'CONTRIB_TYPE_ID'				=> $this->contrib_type,
 				'CONTRIB_TYPE_CLEAN'        	=> $this->type->url,
 
@@ -741,6 +746,7 @@ class titania_contribution extends \phpbb\titania\entity\message_base
 				'U_VIEW_CONTRIB'				=> $this->get_url(),
 
 				'U_REPORT'						=> (phpbb::$user->data['is_registered']) ? $this->get_url('report') : '',
+				'U_CONTRIB_FEED'				=> $this->get_url('feed'),
 				'U_VIEW_REPORTS'				=> $u_view_reports,
 
 				// Contribution Status
@@ -1652,10 +1658,12 @@ class titania_contribution extends \phpbb\titania\entity\message_base
 		{
 			return phpbb::$user->lang('INVALID_PERMALINK', url::generate_slug($permalink));
 		}
-		else if ($permalink == '' || $permalink !== $old_permalink && $this->permalink_exists($permalink))
+
+		if ($permalink === '' || ($permalink !== $old_permalink && $this->permalink_exists($permalink)))
 		{
 			return phpbb::$user->lang['CONTRIB_NAME_EXISTS'];
 		}
+
 		return false;
 	}
 

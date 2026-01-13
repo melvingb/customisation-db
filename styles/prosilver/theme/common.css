@@ -375,6 +375,31 @@ a.screenshot img, img.screenshot {
 	width: 100%;
 }
 
+/* Featured contributions
+--------------------------------------------- */
+
+.contrib-featured-container {
+	margin-top: 5px;
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+
+.contrib-quickview-featured:nth-child(1) {
+	margin-left: -5px;
+	margin-right: 5px;
+}
+
+.contrib-featured {
+	margin-bottom: 10px;
+}
+
+.contrib-featured > span {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
 /* Contribution List
 --------------------------------------------- */
 .contrib-filter {
@@ -412,16 +437,15 @@ a.screenshot img, img.screenshot {
 	border-radius: 10px;
 	box-sizing: border-box;
 	display: inline-block;
-	float: left;
 	margin-bottom: 10px;
 	padding: 15px 10px 10px;
 	position: relative;
 	text-align: center;
-	width: 50%;
+	width: 49%;
 }
 
 .author-contribs .contrib-quickview {
-	width: 33.3%;
+	width: 32.3%;
 }
 
 .quickview-title {
@@ -436,6 +460,7 @@ a.screenshot img, img.screenshot {
 .quickview-preview {
 	height: 130px;
 	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 .quickview-desc {
@@ -678,6 +703,11 @@ li.row dl.codebox dt, li.row dl.codebox dd {
 li.row dl.codebox dd {
 	border: 0;
 	padding: 0;
+}
+
+.bbcode-container .codebox code {
+	white-space: pre-wrap;
+	tab-size: 4;
 }
 
 /* Codebox adjustments for the revision section of BBCode */
@@ -1075,4 +1105,15 @@ hr.solid {
 
 .customisation-database {
 	/* available class for custom CSS/scripting in the body tag */
+}
+
+/* Translation Submission
+--------------------------------------------- */
+.translation-validation {
+	text-align: center;
+	margin: 30px 0px 30px 0px;
+}
+
+.translation-validation > textarea {
+	display: inline-block;
 }

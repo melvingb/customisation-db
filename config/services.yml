@@ -132,6 +132,7 @@ services:
         class: phpbb\titania\config\config
         arguments:
             - '@config'
+            - '@config_text'
             - '%phpbb.titania.root_path%'
             - '%core.php_ext%'
 
@@ -210,10 +211,13 @@ services:
     phpbb.titania.listener:
         class: phpbb\titania\event\main_listener
         arguments:
+            - '@request'
             - '@dbal.conn'
             - '@user'
             - '@template'
             - '@phpbb.titania.controller.helper'
+            - '@phpbb.titania.access'
+            - '@phpbb.titania.contribution.type.collection'
             - '%core.root_path%'
             - '%phpbb.titania.root_path%'
             - '%core.php_ext%'
@@ -469,6 +473,7 @@ services:
          arguments:
              - '@user'
              - '@phpbb.titania.contribution.prevalidator_helper'
+             - '@language'
 
     phpbb.titania.translation.type:
         class: phpbb\titania\contribution\translation\type

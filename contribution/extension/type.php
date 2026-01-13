@@ -72,8 +72,14 @@ class type extends base
 		}
 
 		// Language strings
-		$this->lang = $this->user->lang('EXTENSION');
-		$this->langs = $this->user->lang('EXTENSIONS');
+		$this->lang = array(
+			'lang'		=> $this->user->lang('EXTENSION'),
+			'langs'		=> $this->user->lang('EXTENSIONS'),
+			'new'		=> $this->user->lang('EXTENSION_CONTRIB_NEW'),
+			'cleaned'	=> $this->user->lang('EXTENSION_CONTRIB_CLEANED'),
+			'hidden'	=> $this->user->lang('EXTENSION_CONTRIB_HIDDEN'),
+			'disabled'	=> $this->user->lang('EXTENSION_CONTRIB_DISABLED'),
+		);
 		$this->validation_subject = 'EXTENSION_VALIDATION';
 		$this->validation_message_approve = 'EXTENSION_VALIDATION_MESSAGE_APPROVE';
 		$this->validation_message_deny = 'EXTENSION_VALIDATION_MESSAGE_DENY';
@@ -139,6 +145,14 @@ class type extends base
 		try
 		{
 			$this->repack($package, $contrib, $revision);
+			$repack_complete = $this->user->lang('NEW_REVISION_REPACK_COMPLETE');
+
+			// Oversized packages are over 2MB
+			if ($package->get_size() > 2097152)
+			{
+				$repack_complete .= $this->user->lang('NEW_REVISION_REPACK_OVERSIZE', $contrib->get_url('queue_discussion'));
+			}
+
 		}
 		catch (\Exception $e)
 		{
@@ -147,7 +161,7 @@ class type extends base
 			);
 		}
 		return array(
-			'message'	=> $this->user->lang['NEW_REVISION_REPACK_COMPLETE'],
+			'message' => $repack_complete,
 		);
 	}
 
@@ -164,9 +178,18 @@ class type extends base
 	 */
 	public function epv_test(\titania_contribution $contrib, \titania_revision $revision, attachment $attachment, $download_package, package $package, template $template)
 	{
-		$package->ensure_extracted();
-		$prevalidator = $this->get_prevalidator();
-		$results = $prevalidator->run_epv($package->get_temp_path());
+		if ($revision->skip_epv)
+		{
+			// Skip EPV
+			$results = $this->user->lang('SKIP_EPV_MESSAGE');
+		}
+
+		else
+		{
+			$package->ensure_extracted();
+			$prevalidator = $this->get_prevalidator();
+			$results = $prevalidator->run_epv($package->get_temp_path());
+		}
 
 		$uid = $bitfield = $flags = false;
 		generate_text_for_storage($results, $uid, $bitfield, $flags, true, true, true);
@@ -250,6 +273,10 @@ class type extends base
 		{
 			throw new \Exception('UNSTABLE_COMPOSER_VERSION');
 		}
+		if ($data['extra']['display-name'] !== htmlspecialchars_decode($contrib->contrib_name, ENT_COMPAT))
+		{
+			throw new \Exception($this->user->lang('MISMATCH_DISPLAY_NAME', $data['extra']['display-name'], $contrib->contrib_name));
+		}
 
 		$ext_name = $data['name'];
 		$data['type'] = 'phpbb-extension';
@@ -315,6 +342,7 @@ class type extends base
 				'host'		=> $parts['host'],
 				'directory' => $directory,
 				'filename'	=> substr($parts['path'], strlen($directory) + 1),
+				'ssl'		=> isset($parts['scheme']) ? $parts['scheme'] === 'https' : true,
 			);
 		}
 		return $data;

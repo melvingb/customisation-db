@@ -122,7 +122,7 @@ class author
 			throw new \Exception($this->user->lang['AUTHOR_NOT_FOUND']);
 		}
 
-		$this->is_owner = $this->user->data['user_id'] == $this->author->user_id;
+		$this->is_owner = $this->user->data['user_id'] != ANONYMOUS && $this->user->data['user_id'] == $this->author->user_id;
 
 		// Check to see if the currently accessing user is the author
 		if ($this->access->is_public() && $this->is_owner)
@@ -353,8 +353,9 @@ class author
 	*/
 	protected function create()
 	{
-		if (!$this->is_owner && !$this->auth->acl_get('u_titania_contrib_submit'))
+		if (!$this->auth->acl_get('u_titania_contrib_submit'))
 		{
+			// Show the unauthorised page if the user has insufficient permissions
 			return $this->helper->needs_auth();
 		}
 
